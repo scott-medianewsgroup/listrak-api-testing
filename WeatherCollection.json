@@ -1,0 +1,106 @@
+{
+	"info": {
+		"_postman_id": "b729d4d1-7496-4141-ae54-e8412977aee5",
+		"name": "Weather API - Collection",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "23504751"
+	},
+	"item": [
+		{
+			"name": "London Weather",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://api.openweathermap.org/data/2.5/weather?q=London,uk&APPID=ee9df89648273167b109860a669a6fbe",
+					"protocol": "http",
+					"host": [
+						"api",
+						"openweathermap",
+						"org"
+					],
+					"path": [
+						"data",
+						"2.5",
+						"weather"
+					],
+					"query": [
+						{
+							"key": "q",
+							"value": "London,uk"
+						},
+						{
+							"key": "APPID",
+							"value": "ee9df89648273167b109860a669a6fbe"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "New York Weather",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://api.openweathermap.org/data/2.5/weather?q=New York,us&APPID=ee9df89648273167b109860a669a6fbe",
+					"protocol": "http",
+					"host": [
+						"api",
+						"openweathermap",
+						"org"
+					],
+					"path": [
+						"data",
+						"2.5",
+						"weather"
+					],
+					"query": [
+						{
+							"key": "q",
+							"value": "New York,us"
+						},
+						{
+							"key": "APPID",
+							"value": "ee9df89648273167b109860a669a6fbe"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Los Angeles Weather",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://api.openweathermap.org/data/2.5/weather?q=Los Angeles,us&APPID=ee9df89648273167b109860a669a6fbe",
+					"protocol": "http",
+					"host": [
+						"api",
+						"openweathermap",
+						"org"
+					],
+					"path": [
+						"data",
+						"2.5",
+						"weather"
+					],
+					"query": [
+						{
+							"key": "q",
+							"value": "Los Angeles,us"
+						},
+						{
+							"key": "APPID",
+							"value": "ee9df89648273167b109860a669a6fbe"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
