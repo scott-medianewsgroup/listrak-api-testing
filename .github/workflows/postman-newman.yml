@@ -1,0 +1,50 @@
+name: Run Postman API Tests
+
+on:
+  schedule:
+    - cron: "0 13 * * *"  # Runs London & New York at 5 AM PST (Converted to 13:00 UTC)
+    - cron: "0 15 * * *"  # Runs Los Angeles at 7 AM PST (Converted to 15:00 UTC)
+  workflow_dispatch:  # Allows manual trigger from GitHub UI
+
+jobs:
+  run-weather-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install Newman
+        run: npm install -g newman
+
+      - name: Run London & New York Weather Tests
+        if: github.event.schedule == '0 13 * * *'
+        run: newman run WeatherCollection.json --folder "London Weather" --folder "New York Weather" --reporters cli,json --reporter-json-export results.json
+
+      - name: Run Los Angeles Weather Test
+        if: github.event.schedule == '0 15 * * *'
+        run: newman run WeatherCollection.json --folder "Los Angeles Weather" --reporters cli,json --reporter-json-export results.json
+
+      - name: Upload Test Results
+        uses: actions/upload-artifact@v3
+        with:
+          name: weather-test-results
+          path: results.json
+
+      - name: Send Slack Notification
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: |
+          status=$(jq -r '.run.stats.assertions.failed' results.json)
+          if [ "$status" -gt 0 ]; then
+            message="🚨 *Weather API Tests Failed!* ❌\nCheck logs: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          else
+            message="✅ *Weather API Tests Passed!* 🎉\nAll tests successful!"
+          fi
+          
+          curl -X POST -H 'Content-type: application/json' --data "{\"text\":\"$message\"}" $SLACK_WEBHOOK_URL

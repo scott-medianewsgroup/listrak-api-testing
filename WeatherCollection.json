@@ -8,11 +8,36 @@
 	"item": [
 		{
 			"name": "London Weather",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status Code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Weather Data Exists\", function () {",
+							"    let jsonData = pm.response.json();",
+							"    pm.expect(jsonData.main).to.exist;",
+							"    pm.expect(jsonData.weather).to.exist;",
+							"});",
+							"",
+							"pm.test(\"Temperature Data Exists\", function () {",
+							"    let jsonData = pm.response.json();",
+							"    pm.expect(jsonData.main.temp).to.be.a(\"number\");",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://api.openweathermap.org/data/2.5/weather?q=London,uk&APPID=ee9df89648273167b109860a669a6fbe",
+					"raw": "http://api.openweathermap.org/data/2.5/weather?q=London,uk&APPID={{API_KEY}}",
 					"protocol": "http",
 					"host": [
 						"api",
@@ -31,7 +56,7 @@
 						},
 						{
 							"key": "APPID",
-							"value": "ee9df89648273167b109860a669a6fbe"
+							"value": "{{API_KEY}}"
 						}
 					]
 				}
@@ -40,11 +65,36 @@
 		},
 		{
 			"name": "New York Weather",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status Code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Weather Data Exists\", function () {",
+							"    let jsonData = pm.response.json();",
+							"    pm.expect(jsonData.main).to.exist;",
+							"    pm.expect(jsonData.weather).to.exist;",
+							"});",
+							"",
+							"pm.test(\"Temperature Data Exists\", function () {",
+							"    let jsonData = pm.response.json();",
+							"    pm.expect(jsonData.main.temp).to.be.a(\"number\");",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://api.openweathermap.org/data/2.5/weather?q=New York,us&APPID=ee9df89648273167b109860a669a6fbe",
+					"raw": "http://api.openweathermap.org/data/2.5/weather?q=New York,us&APPID={{API_KEY}}",
 					"protocol": "http",
 					"host": [
 						"api",
@@ -63,7 +113,7 @@
 						},
 						{
 							"key": "APPID",
-							"value": "ee9df89648273167b109860a669a6fbe"
+							"value": "{{API_KEY}}"
 						}
 					]
 				}
@@ -72,11 +122,36 @@
 		},
 		{
 			"name": "Los Angeles Weather",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status Code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Weather Data Exists\", function () {",
+							"    let jsonData = pm.response.json();",
+							"    pm.expect(jsonData.main).to.exist;",
+							"    pm.expect(jsonData.weather).to.exist;",
+							"});",
+							"",
+							"pm.test(\"Temperature Data Exists\", function () {",
+							"    let jsonData = pm.response.json();",
+							"    pm.expect(jsonData.main.temp).to.be.a(\"number\");",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://api.openweathermap.org/data/2.5/weather?q=Los Angeles,us&APPID=ee9df89648273167b109860a669a6fbe",
+					"raw": "http://api.openweathermap.org/data/2.5/weather?q=Los Angeles,us&APPID={{API_KEY}}",
 					"protocol": "http",
 					"host": [
 						"api",
@@ -95,7 +170,7 @@
 						},
 						{
 							"key": "APPID",
-							"value": "ee9df89648273167b109860a669a6fbe"
+							"value": "{{API_KEY}}"
 						}
 					]
 				}
