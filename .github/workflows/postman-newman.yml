@@ -24,11 +24,11 @@ jobs:
 
       - name: Run London & New York Weather Tests
         if: github.event.schedule == '0 13 * * *'
-        run: newman run WeatherCollection.json --folder "London Weather" --folder "New York Weather" --reporters cli,json --reporter-json-export results.json
+        run: newman run WeatherCollection.json --env-var "API_KEY=${{ secrets.OPENWEATHER_API_KEY }}" --folder "London Weather" --folder "New York Weather" --reporters cli,json --reporter-json-export results.json
 
       - name: Run Los Angeles Weather Test
         if: github.event.schedule == '0 15 * * *'
-        run: newman run WeatherCollection.json --folder "Los Angeles Weather" --reporters cli,json --reporter-json-export results.json
+        run: newman run WeatherCollection.json --env-var "API_KEY=${{ secrets.OPENWEATHER_API_KEY }}" --folder "Los Angeles Weather" --reporters cli,json --reporter-json-export results.json
 
       - name: Upload Test Results
         uses: actions/upload-artifact@v3
