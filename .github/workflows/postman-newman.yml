@@ -52,20 +52,62 @@ jobs:
             echo "⚠️ results.json NOT FOUND! Creating default file."
             echo '{"run": {"stats": {"assertions": {"failed": 0}}}}' > results.json
           fi
-          
+
+          # Extract number of failed assertions
           status=$(jq -r '.run.stats.assertions.failed' results.json)
-          
+
+          # Extract weather details per city
+          extract_weather() {
+            city_name="$1"
+            temp_k=$(jq -r ".run.executions[] | select(.item.name == \"${city_name}\") | .response.stream | fromjson | .main.temp" results.json || echo "N/A")
+            time_unix=$(jq -r ".run.executions[] | select(.item.name == \"${city_name}\") | .response.stream | fromjson | .dt" results.json || echo "N/A")
+            status=$(jq -r ".run.executions[] | select(.item.name == \"${city_name}\") | .assertions[].error" results.json | grep -q "false" && echo "✅" || echo "🛑")
+
+            # Convert temperature from Kelvin to Celsius
+            if [[ "$temp_k" != "N/A" ]]; then
+              temp_c=$(echo "scale=2; $temp_k - 273.15" | bc)
+            else
+              temp_c="N/A"
+            fi
+
+            # Convert Unix time to human-readable format
+            if [[ "$time_unix" != "N/A" ]]; then
+              time_readable=$(date -d "@$time_unix" +"%Y-%m-%d %H:%M:%S UTC")
+            else
+              time_readable="N/A"
+            fi
+
+            echo "📍 ${city_name}: 🌡 ${temp_c}°C | ⏰ ${time_readable} ${status}"
+          }
+
+          london_weather=$(extract_weather "London Weather")
+          ny_weather=$(extract_weather "New York Weather")
+          la_weather=$(extract_weather "Los Angeles Weather")
+
+          # Get test execution date
+          test_date=$(date +"%Y-%m-%d %H:%M:%S UTC")
+
+          # Build Slack message
           if [ "$status" -gt 0 ]; then
             message="🚨 *Postman API Test Failed!* ❌\n
             🔹 *Repository:* ${{ github.repository }}\n
             🔹 *Workflow:* ${{ github.workflow }}\n
             🔹 *Run:* [View Logs](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})\n
-            🔹 *Failed Assertions:* $status ❌"
+            🔹 *Failed Assertions:* $status ❌\n
+            🔹 *Test Run Time:* ${test_date}\n
+            ${london_weather}\n
+            ${ny_weather}\n
+            ${la_weather}"
           else
             message="✅ *All API Tests Passed!* 🎉\n
             🔹 *Repository:* ${{ github.repository }}\n
             🔹 *Workflow:* ${{ github.workflow }}\n
-            🔹 *Run:* [View Logs](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})"
+            🔹 *Run:* [View Logs](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})\n
+            🔹 *Test Run Time:* ${test_date}\n
+            ${london_weather}\n
+            ${ny_weather}\n
+            ${la_weather}"
           fi
           
+          # Send to Slack
           curl -X POST -H 'Content-type: application/json' --data "{\"text\":\"$message\"}" $SLACK_WEBHOOK_URL
