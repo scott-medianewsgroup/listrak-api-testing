@@ -20,7 +20,7 @@ jobs:
           node-version: '18'
 
       - name: Install Newman
-        run: npm install -g newman
+        run: npm install -g newman jq
 
       - name: Run London & New York Weather Tests
         if: github.event.schedule == '0 13 * * *'
@@ -42,9 +42,16 @@ jobs:
         run: |
           status=$(jq -r '.run.stats.assertions.failed' results.json)
           if [ "$status" -gt 0 ]; then
-            message="🚨 *Weather API Tests Failed!* ❌\nCheck logs: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+            message="🚨 *Postman API Test Failed!* ❌\n
+            🔹 *Repository:* ${{ github.repository }}\n
+            🔹 *Workflow:* ${{ github.workflow }}\n
+            🔹 *Run:* [View Logs](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})\n
+            🔹 *Failed Assertions:* $status ❌"
           else
-            message="✅ *Weather API Tests Passed!* 🎉\nAll tests successful!"
+            message="✅ *All API Tests Passed!* 🎉\n
+            🔹 *Repository:* ${{ github.repository }}\n
+            🔹 *Workflow:* ${{ github.workflow }}\n
+            🔹 *Run:* [View Logs](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})"
           fi
           
           curl -X POST -H 'Content-type: application/json' --data "{\"text\":\"$message\"}" $SLACK_WEBHOOK_URL
