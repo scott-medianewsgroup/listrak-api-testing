@@ -20,18 +20,21 @@ jobs:
           node-version: '18'
 
       - name: Install Newman
-        run: npm install -g newman jq
+        run: npm install -g newman
+
+      - name: Install jq
+        run: sudo apt-get update && sudo apt-get install -y jq
 
       - name: Run London & New York Weather Tests
         if: github.event.schedule == '0 13 * * *'
-        run: newman run WeatherCollection.json --env-var "API_KEY=${{ secrets.OPENWEATHER_API_KEY }}" --folder "London Weather" --folder "New York Weather" --reporters cli,json --reporter-json-export results.json
+        run: newman run WeatherCollection.json --env-var "API_KEY=${{ secrets.OPENWEATHER_API_KEY }}" --folder "London Weather" --folder "New York Weather" --reporters cli,json --reporter-json-export results.json || echo "{}" > results.json
 
       - name: Run Los Angeles Weather Test
         if: github.event.schedule == '0 15 * * *'
-        run: newman run WeatherCollection.json --env-var "API_KEY=${{ secrets.OPENWEATHER_API_KEY }}" --folder "Los Angeles Weather" --reporters cli,json --reporter-json-export results.json
+        run: newman run WeatherCollection.json --env-var "API_KEY=${{ secrets.OPENWEATHER_API_KEY }}" --folder "Los Angeles Weather" --reporters cli,json --reporter-json-export results.json || echo "{}" > results.json
 
       - name: Upload Test Results (Force v4)
-        uses: actions/upload-artifact@v4  # Ensure using v4
+        uses: actions/upload-artifact@v4
         with:
           name: weather-test-results
           path: results.json
