@@ -1,0 +1,16 @@
+name: Slack Webhook Test
+
+on:
+  workflow_dispatch:  # Allows manual triggering from GitHub Actions UI
+
+jobs:
+  test-slack-notification:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Send Test Notification to Slack
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: |
+          message="🚀 *Slack Webhook Test Successful!* 🎉\nThis is a test message from GitHub Actions."
+          curl -X POST -H 'Content-type: application/json' --data "{\"text\":\"$message\"}" $SLACK_WEBHOOK_URL
