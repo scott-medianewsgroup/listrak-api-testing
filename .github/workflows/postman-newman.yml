@@ -31,7 +31,7 @@ jobs:
         run: newman run WeatherCollection.json --env-var "API_KEY=${{ secrets.OPENWEATHER_API_KEY }}" --folder "Los Angeles Weather" --reporters cli,json --reporter-json-export results.json
 
       - name: Upload Test Results
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4  # Updated from v3 to v4
         with:
           name: weather-test-results
           path: results.json
